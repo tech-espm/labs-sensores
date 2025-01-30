@@ -1,5 +1,6 @@
 ﻿import app = require("teem");
 import appsettings = require("./appsettings");
+import Milesight = require("./models/milesight");
 
 process.env.TZ = "UTC";
 
@@ -26,6 +27,8 @@ app.run({
 
 			if (process.send)
 				process.send("ready");
+
+			Milesight.iniciar();
 
 			console.log(`Servidor executando em ${app.localIp}:${app.port}`);
 		});

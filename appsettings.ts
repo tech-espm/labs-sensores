@@ -23,4 +23,11 @@ export = {
 		password: process.env.app_sqlPool_password as string,
 		database: process.env.app_sqlPool_database as string
 	},
+
+	milesight: {
+		host: process.env.app_milesight_host as string,
+		clientId: process.env.app_milesight_clientId as string,
+		user: process.env.app_milesight_user as string,
+		password: process.env.app_milesight_password as string,
+	},
 };
