@@ -13,15 +13,17 @@ export = {
 	staticFilesDir: process.env.app_staticFilesDir as string,
 	disableStaticFiles: !!parseInt(process.env.app_disableStaticFiles as string),
 
-	sqlPool: {
-		connectionLimit: parseInt(process.env.app_sqlPool_connectionLimit as string),
-		waitForConnections: !!parseInt(process.env.app_sqlPool_waitForConnections as string),
-		charset: process.env.app_sqlPool_charset as string,
-		host: process.env.app_sqlPool_host as string,
-		port: parseInt(process.env.app_sqlPool_port as string),
-		user: process.env.app_sqlPool_user as string,
-		password: process.env.app_sqlPool_password as string,
-		database: process.env.app_sqlPool_database as string
+	sqlConfig: {
+		connectionLimit: parseInt(process.env.app_sqlConfig_connectionLimit as string),
+		waitForConnections: !!parseInt(process.env.app_sqlConfig_waitForConnections as string),
+		charset: process.env.app_sqlConfig_charset as string,
+		host: process.env.app_sqlConfig_host as string,
+		port: parseInt(process.env.app_sqlConfig_port as string),
+		user: process.env.app_sqlConfig_user as string,
+		password: process.env.app_sqlConfig_password as string,
+		database: process.env.app_sqlConfig_database as string,
+		supportBigNumbers: true,
+		bigNumberStrings: false,
 	},
 
 	milesight: {

@@ -11,7 +11,7 @@ app.run({
 	staticRoot: "public",
 	staticFilesDir: appsettings.staticFilesDir,
 	disableStaticFiles: appsettings.disableStaticFiles,
-	sqlConfig: appsettings.sqlPool,
+	sqlConfig: appsettings.sqlConfig,
 
 	onFinish: function () {
 		const server = app.express.listen(app.port, app.localIp, function () {
