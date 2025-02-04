@@ -1,6 +1,7 @@
 ﻿import app = require("teem");
 import appsettings = require("./appsettings");
 import Milesight = require("./models/milesight");
+import Steinel = require("./models/steinel");
 
 process.env.TZ = "UTC";
 
@@ -29,6 +30,7 @@ app.run({
 				process.send("ready");
 
 			Milesight.iniciar();
+			Steinel.iniciar();
 
 			console.log(`Servidor executando em ${app.localIp}:${app.port}`);
 		});

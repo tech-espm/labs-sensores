@@ -2,11 +2,38 @@
 -- CREATE DATABASE IF NOT EXISTS sensores;
 CREATE DATABASE IF NOT EXISTS sensores DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_0900_ai_ci;
 
+-- Todos os deltas estão em segundos
+
 USE sensores;
 
 -- Sensores Steinel
 
+-- Cada uma das 8 zonas (0 ... 7) será mapeada como um id_sensor (1 ... 8)
+-- topic espm/stainel/hpd/DetectedPersonsZone
+-- {"DetectedPersonsZone":[0,0,2,1,1,0,1,0]}
+-- topic espm/stainel/hpd/LuxZone
+-- {"LuxZone":[70.00,78.00,74.00,87.00,67.00,57.00,50.00,53.00]}
+-- topic espm/stainel/hpd/Humidity
+-- {"Humidity":67.00}
+-- topic espm/stainel/hpd/Temperature
+-- {"Temperature":24.30}
+CREATE TABLE pca (
+  id bigint NOT NULL AUTO_INCREMENT,
+  data datetime NOT NULL,
+  id_sensor tinyint NOT NULL,
+  delta int NOT NULL, -- O campo delta diz respeito a alterações no valor de pessoas
+  pessoas tinyint NOT NULL,
+  luminosidade float NOT NULL,
+  umidade float NOT NULL,
+  temperatura float NOT NULL,
+  PRIMARY KEY (id),
+  KEY pca_data_id_sensor (data, id_sensor),
+  KEY pca_id_sensor (id_sensor)
+);
+
 -- Sensores Milesight
+
+-- O timestamp foi removido do banco porque ele não seguia um padrão crescente quando recebido dos sensores
 
 -- topic v3/espm/devices/soil01/up
 -- topic v3/espm/devices/soil02/up
@@ -15,7 +42,6 @@ CREATE TABLE solo (
   id bigint NOT NULL AUTO_INCREMENT,
   data datetime NOT NULL,
   id_sensor tinyint NOT NULL,
-  timestamp bigint NOT NULL,
   delta int NOT NULL,
   condutividade float NOT NULL,
   umidade float NOT NULL,
@@ -32,7 +58,6 @@ CREATE TABLE odor (
   id bigint NOT NULL AUTO_INCREMENT,
   data datetime NOT NULL,
   id_sensor tinyint NOT NULL,
-  timestamp bigint NOT NULL,
   delta int NOT NULL,
   bateria tinyint NOT NULL,
   h2s float NOT NULL,
@@ -57,7 +82,6 @@ CREATE TABLE presenca (
   id bigint NOT NULL AUTO_INCREMENT,
   data datetime NOT NULL,
   id_sensor tinyint NOT NULL,
-  timestamp bigint NOT NULL,
   delta int NOT NULL,
   bateria tinyint NOT NULL,
   ocupado tinyint NOT NULL,
@@ -74,7 +98,6 @@ CREATE TABLE abertura (
   id bigint NOT NULL AUTO_INCREMENT,
   data datetime NOT NULL,
   id_sensor tinyint NOT NULL,
-  timestamp bigint NOT NULL,
   delta int NOT NULL,
   bateria tinyint NOT NULL,
   fechado tinyint NOT NULL,
@@ -90,7 +113,6 @@ CREATE TABLE temperatura (
   id bigint NOT NULL AUTO_INCREMENT,
   data datetime NOT NULL,
   id_sensor tinyint NOT NULL,
-  timestamp bigint NOT NULL,
   delta int NOT NULL,
   umidade float NOT NULL,
   temperatura float NOT NULL,
@@ -106,7 +128,6 @@ CREATE TABLE passagem (
   id bigint NOT NULL AUTO_INCREMENT,
   data datetime NOT NULL,
   id_sensor tinyint NOT NULL,
-  timestamp bigint NOT NULL,
   delta int NOT NULL,
   bateria tinyint NOT NULL,
   entrada int NOT NULL,

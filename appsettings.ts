@@ -32,4 +32,11 @@ export = {
 		user: process.env.app_milesight_user as string,
 		password: process.env.app_milesight_password as string,
 	},
+
+	steinel: {
+		host: process.env.app_steinel_host as string,
+		clientId: process.env.app_steinel_clientId as string,
+		user: process.env.app_steinel_user as string,
+		password: process.env.app_steinel_password as string,
+	},
 };

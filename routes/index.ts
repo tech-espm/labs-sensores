@@ -1,7 +1,9 @@
 import app = require("teem");
 import appsettings = require("../appsettings");
 import DataUtil = require("../utils/dataUtil");
+import Log = require("../models/log");
 import Milesight = require("../models/milesight");
+import Steinel = require("../models/steinel");
 
 class IndexRoute {
 	public static async index(req: app.Request, res: app.Response) {
@@ -21,7 +23,11 @@ class IndexRoute {
 	<h1>Status</h1>
 	<p><b>Horário do Servidor:</b> ${DataUtil.horarioDeBrasiliaISOComHorario()}</p>
 	<hr/>
+	${Log.obterStatusHTML()}
+	<hr/>
 	${Milesight.obterStatusHTML()}
+	<hr/>
+	${Steinel.obterStatusHTML()}
 </body>
 </html>
 `);
@@ -37,6 +43,11 @@ class IndexRoute {
 
 		const sensor = req.query["sensor"] as string;
 		switch (sensor) {
+			case "pca":
+				tabela = "pca";
+				campos = "pessoas, luminosidade, umidade, temperatura";
+				break;
+
 			case "soil":
 				tabela = "solo";
 				campos = "condutividade, umidade, temperatura";
@@ -85,7 +96,7 @@ class IndexRoute {
 			params.push(id_sensor);
 
 		await app.sql.connect(async sql => {
-			res.json(await sql.query(`SELECT id, date_format(data, '%Y-%m-%d %H:%i:%s') data, id_sensor, timestamp, delta, ${campos} FROM ${tabela} WHERE data BETWEEN ? AND ?${(id_sensor ? " AND id_sensor = ?" : "")} ORDER BY id ASC`, params));
+			res.json(await sql.query(`SELECT id, date_format(data, '%Y-%m-%d %H:%i:%s') data, id_sensor, delta, ${campos} FROM ${tabela} WHERE data BETWEEN ? AND ?${(id_sensor ? " AND id_sensor = ?" : "")} ORDER BY id ASC`, params));
 		});
 	}
 }
