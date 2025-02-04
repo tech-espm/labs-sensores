@@ -48,6 +48,11 @@ class IndexRoute {
 				campos = "pessoas, luminosidade, umidade, temperatura";
 				break;
 
+			case "creative":
+				tabela = "creative";
+				campos = "luminosidade, umidade, temperatura, voc, co2, pressao_ar, ruido, aerosol_parado, aerosol_risco, ponto_orvalho";
+				break;
+
 			case "soil":
 				tabela = "solo";
 				campos = "condutividade, umidade, temperatura";
