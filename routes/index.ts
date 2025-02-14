@@ -87,21 +87,46 @@ class IndexRoute {
 				return;
 		}
 
-		const id_sensor = parseInt(req.query["id_sensor"] as string) || 0;
+		let where = "";
+		const params: any[] = [];
+
+		const id_inferior = parseInt(req.query["id_inferior"] as string);
+		if (!isNaN(id_inferior)) {
+			if (where)
+				where += " AND ";
+			where += "id > ?"
+			params.push(id_inferior);
+		}
 
 		const data_inicial = DataUtil.converterDataISO(req.query["data_inicial"] as string);
 		const data_final = DataUtil.converterDataISO(req.query["data_final"] as string);
-		if (!data_inicial || !data_final) {
-			res.status(400).json("Intervalo de datas inválido");
+		if (data_inicial || data_final) {
+			if (!data_inicial || !data_final) {
+				res.status(400).json("Intervalo de datas inválido");
+				return;
+			}
+
+			if (where)
+				where += " AND ";
+			where += "data BETWEEN ? AND ?"
+			params.push(data_inicial, data_final);
+		}
+
+		if (!where) {
+			res.status(400).json("É necessário fornecer ao menos um id inferior ou um intervalo de datas válido");
 			return;
 		}
 
-		const params: any[] = [data_inicial, data_final];
-		if (id_sensor)
+		const id_sensor = parseInt(req.query["id_sensor"] as string) || 0;
+		if (id_sensor) {
+			if (where)
+				where += " AND ";
+			where += "id_sensor = ?"
 			params.push(id_sensor);
+		}
 
 		await app.sql.connect(async sql => {
-			res.json(await sql.query(`SELECT id, date_format(data, '%Y-%m-%d %H:%i:%s') data, id_sensor, delta, ${campos} FROM ${tabela} WHERE data BETWEEN ? AND ?${(id_sensor ? " AND id_sensor = ?" : "")} ORDER BY id ASC`, params));
+			res.json(await sql.query(`SELECT id, date_format(data, '%Y-%m-%d %H:%i:%s') data, id_sensor, delta, ${campos} FROM ${tabela} WHERE ${where} ORDER BY id ASC`, params));
 		});
 	}
 }
